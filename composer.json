@@ -1,0 +1,14 @@
+{
+    "name": "dfabulich/google-play-store-reviews-rss-feed",
+    "description": "An RSS feed for your Google Play Store app reviews",
+    "license": "ISC",
+    "authors": [
+        {
+            "name": "Dan Fabulich",
+            "email": "dan@fabulich.com"
+        }
+    ],
+    "require": {
+        "google/apiclient": "^2.0.0@RC"
+    }
+}
