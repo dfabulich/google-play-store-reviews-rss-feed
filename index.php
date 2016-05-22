@@ -27,7 +27,8 @@ if (!count($reviews)) {
 	$updated = new DateTime("@".$reviews[0]->getComments()[0]->getUserComment()->getLastModified()->getSeconds());
 }
 
-Header( "Content-Type: application/atom+xml");
+Header( "Content-Type: application/atom+xml; charset=utf-8");
+
 
 echo '<?xml version="1.0" encoding="utf-8"?>';
 ?>
@@ -41,18 +42,22 @@ echo '<?xml version="1.0" encoding="utf-8"?>';
 
 foreach ($reviews as $review) {
 	$author = $review->getAuthorName();
+	$solid_star = json_decode('"\u2605"');
+	$empty_star = json_decode('"\u2606"');
 
 	foreach ($review->getComments() as $comment) {
-		$raw_content = $comment->getUserComment()->getText();
+		$user_comment = $comment->getUserComment();
+		$star_rating = str_repeat($solid_star, $user_comment->starRating) . str_repeat($empty_star, 5 - $user_comment->starRating);
+		$raw_content = $user_comment->getText();
 		$tab_index = strpos($raw_content, "\t");
 		if ($tab_index === false) {
-			$title = "";
+			$title = $star_rating;
 			$content = $raw_content;
 		} else {
-			$title = substr($raw_content, 0, $tab_index);
+			$title = $star_rating . ": " . substr($raw_content, 0, $tab_index);
 			$content = substr($raw_content, $tab_index+1);
 		}
-		$updated = new DateTime("@".$comment->getUserComment()->getLastModified()->getSeconds());
+		$updated = new DateTime("@".$user_comment->getLastModified()->getSeconds());
 		?>
 
 <entry>
