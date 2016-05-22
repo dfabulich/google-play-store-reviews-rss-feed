@@ -9,6 +9,10 @@ $client->setScopes("https://www.googleapis.com/auth/androidpublisher");
 
 $service = new Google_Service_AndroidPublisher($client);
 
+if (!array_key_exists("package", $_GET)) {
+	throw new Exception("You must specify an Android package as an URL parameter, e.g. ?package=com.example.app");
+}
+
 $package = $_GET['package'];
 
 if (!preg_match('/^[a-zA-Z0-9.]+$/', $package)) {
