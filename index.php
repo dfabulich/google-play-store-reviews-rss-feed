@@ -37,6 +37,10 @@ $title = $xpath->query('//*[@itemtype="http://schema.org/MobileApplication"]//*[
 
 $icon = $xpath->query('//*[@itemtype="http://schema.org/MobileApplication"]//*[@itemprop="image"]')->item(0)->getAttribute("src");
 
+if (substr($icon, 0, 2) == "//") {
+	$icon = "https:".$icon;
+}
+
 # Why do I have to set scopes? Doesn't the service normally do this for me automatically?
 $client->setScopes("https://www.googleapis.com/auth/androidpublisher");
 
