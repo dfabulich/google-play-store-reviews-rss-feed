@@ -35,6 +35,8 @@ $doc->loadHTML($html);
 $xpath = new DOMXPath($doc);
 $title = $xpath->query('//*[@itemtype="http://schema.org/MobileApplication"]//*[@itemprop="name"]//text()[string-length(normalize-space()) > 0]')->item(0)->textContent;
 
+$title = htmlspecialchars($title, ENT_XML1, 'UTF-8');
+
 $icon = $xpath->query('//*[@itemtype="http://schema.org/MobileApplication"]//*[@itemprop="image"]')->item(0)->getAttribute("src");
 
 if (substr($icon, 0, 2) == "//") {
@@ -73,7 +75,7 @@ echo '<?xml version="1.0" encoding="utf-8"?>';
 <?php
 
 foreach ($reviews as $review) {
-	$author = $review->getAuthorName();
+	$author = htmlspecialchars($review->getAuthorName(), ENT_XML1, 'UTF-8');
 	$solid_star = json_decode('"\u2605"');
 	$empty_star = json_decode('"\u2606"');
 
@@ -84,10 +86,12 @@ foreach ($reviews as $review) {
 		$tab_index = strpos($raw_content, "\t");
 		if ($tab_index === false) {
 			$title = $star_rating;
-			$content = $raw_content;
+			$content = htmlspecialchars($raw_content, ENT_XML1, 'UTF-8');
 		} else {
-			$title = $star_rating . ": " . substr($raw_content, 0, $tab_index);
-			$content = substr($raw_content, $tab_index+1);
+			$raw_title = substr($raw_content, 0, $tab_index);
+			$title = $star_rating . ": " . htmlspecialchars($raw_title, ENT_XML1, 'UTF-8');
+			$raw_content = substr($raw_content, $tab_index+1);
+			$content = htmlspecialchars($raw_content, ENT_XML1, 'UTF-8');
 		}
 		$updated = new DateTime("@".$user_comment->getLastModified()->getSeconds());
 		?>
@@ -96,7 +100,7 @@ foreach ($reviews as $review) {
 	<id><?= $review->getReviewId() ?></id>
 	<title><?= $title ?></title>
 	<updated><?= $updated->format(DateTime::ATOM) ?></updated>
-	<author><name><?= $review->getAuthorName() ?></name></author>
+	<author><name><?= $author ?></name></author>
 	<content type="text"><?= $content ?></content>
 	<link href="https://play.google.com/apps/publish/#ReviewDetailsPlace:p=<?= $package?>&amp;reviewid=<?=$review->getReviewId()?>" />
 </entry>
