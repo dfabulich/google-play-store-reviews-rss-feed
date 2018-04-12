@@ -102,7 +102,7 @@ foreach ($reviews as $review) {
 	<title><?= $title ?></title>
 	<updated><?= $updated->format(DateTime::ATOM) ?></updated>
 	<author><name><?= $author ?></name></author>
-	<content type="text"><?= $content ?></content>
+	<content type="text">by <?= "$author\n" ?><?= $content ?></content>
 	<link href="https://play.google.com/apps/publish/#ReviewDetailsPlace:p=<?= $package?>&amp;reviewid=<?=$review->getReviewId()?>" />
 </entry>
 		<?php
