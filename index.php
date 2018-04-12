@@ -33,11 +33,12 @@ $doc = new DOMDocument();
 $doc->loadHTML($html);
 
 $xpath = new DOMXPath($doc);
-$title = $xpath->query('//*[@itemtype="http://schema.org/MobileApplication"]//*[@itemprop="name"]//text()[string-length(normalize-space()) > 0]')->item(0)->textContent;
+$title = $xpath->query('//title')->item(0)->textContent;
 
 $title = htmlspecialchars($title, ENT_XML1, 'UTF-8');
+$title = str_replace(" - Apps on Google Play", "", $title);
 
-$icon = $xpath->query('//*[@itemtype="http://schema.org/MobileApplication"]//*[@itemprop="image"]')->item(0)->getAttribute("src");
+$icon = $xpath->query('//img[@alt="Cover art"]')->item(0)->getAttribute("src");
 
 if (substr($icon, 0, 2) == "//") {
 	$icon = "https:".$icon;
